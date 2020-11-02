@@ -1,7 +1,7 @@
 ---
 title: Outils pour ASP.NET Core Blazor
 author: guardrex
-description: En savoir plus sur les outils disponibles pour créer des Blazor applications.
+description: En savoir plus sur les outils disponibles pour créer des applications Blazor.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
 ms.custom: mvc
