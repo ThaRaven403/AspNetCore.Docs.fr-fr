@@ -1,5 +1,5 @@
 ---
-title: BlazorPlateformes prises en charge ASP.net Core
+title: Plateformes prises en charge ASP.net Core Blazor
 author: guardrex
 description: En savoir plus sur les plateformes prises en charge pour ASP.NET Core Blazor .
 monikerRange: '>= aspnetcore-3.1'
@@ -71,7 +71,7 @@ Blazor WebAssembly et Blazor Server sont pris en charge dans les navigateurs pr�
 | Mozilla Firefox                  | Actuel&dagger; |
 
 &dagger;*Current* fait référence à la dernière version du navigateur.  
-&Dagger;Des polyremplissages supplémentaires sont nécessaires. Par exemple, les promesses peuvent être ajoutées via un [`Polyfill.io`](https://polyfill.io/v3/) bundle.
+&Dagger;Des polyremplissages supplémentaires sont nécessaires. Par exemple, les promesses peuvent être ajoutées via un bundle [`Polyfill.io`](https://polyfill.io/v3/).
 
 ::: moniker-end
 
