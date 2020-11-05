@@ -1,7 +1,7 @@
 ---
 title: Appeler des méthodes .NET à partir de fonctions JavaScript dans ASP.NET Core Blazor
 author: guardrex
-description: Découvrez comment appeler des méthodes .NET à partir de fonctions JavaScript dans des Blazor applications.
+description: Découvrez comment appeler des méthodes .NET à partir de fonctions JavaScript dans des applications Blazor.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
 ms.custom: mvc, devx-track-js
@@ -28,19 +28,19 @@ ms.locfileid: "93234398"
 ---
 # <a name="call-net-methods-from-javascript-functions-in-aspnet-core-no-locblazor"></a>Appeler des méthodes .NET à partir de fonctions JavaScript dans ASP.NET Core Blazor
 
-Par [Javier Calvarro Nelson](https://github.com/javiercn), [Daniel Roth](https://github.com/danroth27), [Shashikant Rudrawadi](http://wisne.co)et [Luke Latham](https://github.com/guardrex)
+Par [Javier Calvarro Nelson](https://github.com/javiercn), [Daniel Roth](https://github.com/danroth27), [Shashikant Rudrawadi](http://wisne.co) et [Luke Latham](https://github.com/guardrex)
 
-Une Blazor application peut appeler des fonctions JavaScript à partir de méthodes .net et de méthodes .net à partir de fonctions JavaScript. Ces scénarios portent le nom de *l’interopérabilité de JavaScript* ( *js Interop* ).
+Une application Blazor peut appeler des fonctions JavaScript à partir de méthodes .net et de méthodes .net à partir de fonctions JavaScript. Ces scénarios portent le nom de *l’interopérabilité de JavaScript* ( *js Interop* ).
 
-Cet article traite de l’appel de méthodes .NET à partir de JavaScript. Pour plus d’informations sur l’appel de fonctions JavaScript à partir de .NET, consultez <xref:blazor/call-javascript-from-dotnet> .
+Cet article traite de l’appel de méthodes .NET à partir de JavaScript. Pour plus d’informations sur l’appel de fonctions JavaScript à partir de .NET, consultez <xref:blazor/call-javascript-from-dotnet>.
 
 [Afficher ou télécharger l’exemple de code](https://github.com/dotnet/AspNetCore.Docs/tree/master/aspnetcore/blazor/common/samples/) ([procédure de téléchargement](xref:index#how-to-download-a-sample))
 
 ## <a name="static-net-method-call"></a>Appel de méthode .NET statique
 
-Pour appeler une méthode .NET statique à partir de JavaScript, utilisez les `DotNet.invokeMethod` `DotNet.invokeMethodAsync` fonctions ou. Transmettez l’identificateur de la méthode statique que vous souhaitez appeler, le nom de l’assembly contenant la fonction et les arguments éventuels. La version asynchrone est recommandée pour prendre en charge les Blazor Server scénarios. La méthode .NET doit être publique, statique et avoir l' [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute) attribut. L’appel de méthodes génériques ouvertes n’est pas pris en charge actuellement.
+Pour appeler une méthode .NET statique à partir de JavaScript, utilisez les fonctions `DotNet.invokeMethod` ou `DotNet.invokeMethodAsync`. Transmettez l’identificateur de la méthode statique que vous souhaitez appeler, le nom de l’assembly contenant la fonction et les arguments éventuels. La version asynchrone est recommandée pour prendre en charge les scénarios Blazor Server. La méthode .NET doit être publique, statique et avoir l'attribut [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute). L’appel de méthodes génériques ouvertes n’est pas pris en charge actuellement.
 
-L’exemple d’application comprend une méthode C# pour retourner un `int` tableau. L' [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute) attribut est appliqué à la méthode.
+L’exemple d’application comprend une méthode C# pour retourner un tableau `int`. L'attribut [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute) est appliqué à la méthode.
 
 `Pages/JsInterop.razor`:
 
@@ -65,7 +65,7 @@ JavaScript traité au client appelle la méthode .NET C#.
 
 [!code-javascript[](./common/samples/3.x/BlazorWebAssemblySample/wwwroot/exampleJsInterop.js?highlight=8-14)]
 
-Lorsque le **`Trigger .NET static method ReturnArrayAsync`** bouton est sélectionné, examinez la sortie de la console dans les outils de développement Web du navigateur.
+Lorsque le bouton **`Trigger .NET static method ReturnArrayAsync`** est sélectionné, examinez la sortie de la console dans les outils de développement Web du navigateur.
 
 La sortie de la console est la suivante :
 
@@ -73,9 +73,9 @@ La sortie de la console est la suivante :
 Array(4) [ 1, 2, 3, 4 ]
 ```
 
-La quatrième valeur de tableau fait l’objet d’un push dans le tableau ( `data.push(4);` ) retourné par `ReturnArrayAsync` .
+La quatrième valeur de tableau fait l’objet d’un push dans le tableau ( `data.push(4);` ) retourné par `ReturnArrayAsync`.
 
-Par défaut, l’identificateur de méthode est le nom de la méthode, mais vous pouvez spécifier un identificateur différent à l’aide du [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute) constructeur d’attribut :
+Par défaut, l’identificateur de méthode est le nom de la méthode, mais vous pouvez spécifier un identificateur différent à l’aide du constructeur d’attribut [`[JSInvokable]`](xref:Microsoft.JSInterop.JSInvokableAttribute) :
 
 ```csharp
 @code {
@@ -106,14 +106,14 @@ L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application
 Vous pouvez également appeler des méthodes d’instance .NET à partir de JavaScript. Pour appeler une méthode d’instance .NET à partir de JavaScript :
 
 * Passer l’instance .NET par référence à JavaScript :
-  * Effectuez un appel statique à <xref:Microsoft.JSInterop.DotNetObjectReference.Create%2A?displayProperty=nameWithType> .
-  * Encapsulez l’instance dans une <xref:Microsoft.JSInterop.DotNetObjectReference> instance et appelez <xref:Microsoft.JSInterop.DotNetObjectReference.Create%2A> sur l' <xref:Microsoft.JSInterop.DotNetObjectReference> instance. Supprimez des <xref:Microsoft.JSInterop.DotNetObjectReference> objets (un exemple apparaît plus loin dans cette section).
-* Appeler des méthodes d’instance .NET sur l’instance à l’aide des `invokeMethod` `invokeMethodAsync` fonctions ou. L’instance .NET peut également être passée comme argument lors de l’appel d’autres méthodes .NET à partir de JavaScript.
+  * Effectuez un appel statique à <xref:Microsoft.JSInterop.DotNetObjectReference.Create%2A?displayProperty=nameWithType>.
+  * Encapsulez l’instance dans une instance <xref:Microsoft.JSInterop.DotNetObjectReference> et appelez <xref:Microsoft.JSInterop.DotNetObjectReference.Create%2A> sur l'instance <xref:Microsoft.JSInterop.DotNetObjectReference>. Supprimez des objets <xref:Microsoft.JSInterop.DotNetObjectReference> (un exemple apparaît plus loin dans cette section).
+* Appeler des méthodes d’instance .NET sur l’instance à l’aide des fonctions `invokeMethod` ou `invokeMethodAsync`. L’instance .NET peut également être passée comme argument lors de l’appel d’autres méthodes .NET à partir de JavaScript.
 
 > [!NOTE]
 > L’exemple d’application enregistre les messages dans la console côté client. Pour les exemples suivants présentés dans l’exemple d’application, examinez la sortie de console du navigateur dans les outils de développement du navigateur.
 
-Lorsque le **`Trigger .NET instance method HelloHelper.SayHello`** bouton est sélectionné, `ExampleJsInterop.CallHelloHelperSayHello` est appelé et passe un nom, `Blazor` , à la méthode.
+Lorsque le bouton **`Trigger .NET instance method HelloHelper.SayHello`** est sélectionné, `ExampleJsInterop.CallHelloHelperSayHello` est appelé et passe un nom, `Blazor`, à la méthode.
 
 `Pages/JsInterop.razor`:
 
@@ -131,7 +131,7 @@ Lorsque le **`Trigger .NET instance method HelloHelper.SayHello`** bouton est s�
 }
 ```
 
-`CallHelloHelperSayHello` appelle la fonction JavaScript `sayHello` avec une nouvelle instance de `HelloHelper` .
+`CallHelloHelperSayHello` appelle la fonction JavaScript `sayHello` avec une nouvelle instance de `HelloHelper`.
 
 `JsInteropClasses/ExampleJsInterop.cs`:
 
@@ -141,7 +141,7 @@ Lorsque le **`Trigger .NET instance method HelloHelper.SayHello`** bouton est s�
 
 [!code-javascript[](./common/samples/3.x/BlazorWebAssemblySample/wwwroot/exampleJsInterop.js?highlight=15-18)]
 
-Le nom est passé au `HelloHelper` constructeur de, qui définit la `HelloHelper.Name` propriété. Lorsque la fonction JavaScript `sayHello` est exécutée, `HelloHelper.SayHello` retourne le `Hello, {Name}!` message, qui est écrit dans la console par la fonction JavaScript.
+Le nom est passé au constructeur de `HelloHelper`, qui définit la propriété `HelloHelper.Name`. Lorsque la fonction JavaScript `sayHello` est exécutée, `HelloHelper.SayHello` retourne le message `Hello, {Name}!`, qui est écrit dans la console par la fonction JavaScript.
 
 `JsInteropClasses/HelloHelper.cs`:
 
@@ -153,9 +153,9 @@ Sortie de la console dans les outils de développement Web du navigateur :
 Hello, Blazor!
 ```
 
-Pour éviter une fuite de mémoire et autoriser garbage collection sur un composant qui crée un <xref:Microsoft.JSInterop.DotNetObjectReference> , adoptez l’une des approches suivantes :
+Pour éviter une fuite de mémoire et autoriser garbage collection sur un composant qui crée un <xref:Microsoft.JSInterop.DotNetObjectReference>, adoptez l’une des approches suivantes :
 
-* Supprimez l’objet dans la classe qui a créé l' <xref:Microsoft.JSInterop.DotNetObjectReference> instance :
+* Supprimez l’objet dans la classe qui a créé l'instance <xref:Microsoft.JSInterop.DotNetObjectReference> :
 
   ```csharp
   public class ExampleJsInterop : IDisposable
@@ -184,7 +184,7 @@ Pour éviter une fuite de mémoire et autoriser garbage collection sur un compos
   }
   ```
 
-  Le modèle précédent présenté dans la `ExampleJsInterop` classe peut également être implémenté dans un composant :
+  Le modèle précédent présenté dans la classe `ExampleJsInterop` peut également être implémenté dans un composant :
 
   ```razor
   @page "/JSInteropComponent"
@@ -217,9 +217,9 @@ Pour éviter une fuite de mémoire et autoriser garbage collection sur un compos
   }
   ```
   
-  L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample` ).
+  L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample`).
 
-* Lorsque le composant ou la classe ne supprime pas le <xref:Microsoft.JSInterop.DotNetObjectReference> , supprimez l’objet sur le client en appelant `.dispose()` :
+* Lorsque le composant ou la classe ne supprime pas le <xref:Microsoft.JSInterop.DotNetObjectReference>, supprimez l’objet sur le client en appelant `.dispose()` :
 
   ```javascript
   window.myFunction = (dotnetHelper) => {
@@ -232,13 +232,13 @@ Pour éviter une fuite de mémoire et autoriser garbage collection sur un compos
 
 Pour appeler les méthodes .NET d’un composant :
 
-* Utilisez la `invokeMethod` `invokeMethodAsync` fonction ou pour effectuer un appel de méthode statique au composant.
+* Utilisez la fonction `invokeMethod` ou `invokeMethodAsync` pour effectuer un appel de méthode statique au composant.
 * La méthode statique du composant encapsule l’appel à sa méthode d’instance en tant que appelé <xref:System.Action> .
 
 > [!NOTE]
-> Pour les Blazor Server applications, où plusieurs utilisateurs peuvent utiliser le même composant simultanément, utilisez une classe d’assistance pour appeler des méthodes d’instance.
+> Pour les applications Blazor Server, où plusieurs utilisateurs peuvent utiliser le même composant simultanément, utilisez une classe d’assistance pour appeler des méthodes d’instance.
 >
-> Pour plus d’informations, consultez la section de la [classe d’assistance de la méthode d’instance de composant](#component-instance-method-helper-class) .
+> Pour plus d’informations, consultez la section de la [classe d’assistance de la méthode d’instance de composant](#component-instance-method-helper-class).
 
 Dans le code JavaScript côté client :
 
@@ -248,7 +248,7 @@ function updateMessageCallerJS() {
 }
 ```
 
-L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample` ).
+L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample`).
 
 `Pages/JSInteropComponent.razor`:
 
@@ -296,7 +296,7 @@ Pour passer des arguments à la méthode d’instance :
   }
   ```
   
-  L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample` ).
+  L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample`).
 
 * Fournissez les types corrects au <xref:System.Action> pour les paramètres. Fournissez la liste de paramètres aux méthodes C#. Appelez <xref:System.Action> ( `UpdateMessage` ) avec les paramètres ( `action.Invoke(name)` ).
 
@@ -346,16 +346,16 @@ Pour passer des arguments à la méthode d’instance :
 
 ## <a name="component-instance-method-helper-class"></a>Classe d’assistance de méthode d’instance de composant
 
-La classe d’assistance est utilisée pour appeler une méthode d’instance en tant que <xref:System.Action> . Les classes d’assistance sont utiles dans les cas suivants :
+La classe d’assistance est utilisée pour appeler une méthode d’instance en tant que <xref:System.Action>. Les classes d’assistance sont utiles dans les cas suivants :
 
 * Plusieurs composants du même type sont rendus sur la même page.
-* Une Blazor Server application est utilisée, où plusieurs utilisateurs peuvent utiliser un composant simultanément.
+* Une application Blazor Server est utilisée, où plusieurs utilisateurs peuvent utiliser un composant simultanément.
 
 Dans l’exemple suivant :
 
-* Le `JSInteropExample` composant contient plusieurs `ListItem` composants.
-* Chaque `ListItem` composant se compose d’un message et d’un bouton.
-* Quand un `ListItem` bouton de composant est sélectionné, `ListItem` la `UpdateMessage` méthode modifie le texte de l’élément de liste et masque le bouton.
+* Le composant `JSInteropExample` contient plusieurs composants `ListItem`.
+* Chaque composant `ListItem` se compose d’un message et d’un bouton.
+* Quand un bouton du composant `ListItem` est sélectionné, la méthode `UpdateMessage` du `ListItem` modifie le texte de l’élément de liste et masque le bouton.
 
 `MessageUpdateInvokeHelper.cs`:
 
@@ -454,7 +454,7 @@ Les objets qui contiennent des références circulaires ne peuvent pas être sé
 
 Pour plus d’informations, consultez les problèmes suivants :
 
-* [Les références circulaires ne sont pas prises en charge, prennent deux (dotnet/aspnetcore #20525)](https://github.com/dotnet/aspnetcore/issues/20525)
+* [Les références circulaires ne sont pas prises en charge, prise deux (dotnet/aspnetcore #20525)](https://github.com/dotnet/aspnetcore/issues/20525)
 * [Proposition : ajouter un mécanisme pour gérer les références circulaires lors de la sérialisation (dotnet/Runtime #30820)](https://github.com/dotnet/runtime/issues/30820)
 
 ## <a name="additional-resources"></a>Ressources supplémentaires
