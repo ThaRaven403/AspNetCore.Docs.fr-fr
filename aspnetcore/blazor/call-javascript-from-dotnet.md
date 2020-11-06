@@ -1,7 +1,7 @@
 ---
 title: Appeler des fonctions JavaScript à partir de méthodes .NET dans ASP.NET Core Blazor
 author: guardrex
-description: Découvrez comment appeler des fonctions JavaScript à partir de méthodes .NET dans des Blazor applications.
+description: Découvrez comment appeler des fonctions JavaScript à partir de méthodes .NET dans des applications.
 monikerRange: '>= aspnetcore-3.1'
 ms.author: riande
 ms.custom: mvc, devx-track-js
@@ -28,23 +28,23 @@ ms.locfileid: "93234450"
 ---
 # <a name="call-javascript-functions-from-net-methods-in-aspnet-core-no-locblazor"></a>Appeler des fonctions JavaScript à partir de méthodes .NET dans ASP.NET Core Blazor
 
-Par [Javier Calvarro Nelson](https://github.com/javiercn), [Daniel Roth](https://github.com/danroth27)et [Luke Latham](https://github.com/guardrex)
+Par [Javier Calvarro Nelson](https://github.com/javiercn), [Daniel Roth](https://github.com/danroth27) et [Luke Latham](https://github.com/guardrex)
 
-Une Blazor application peut appeler des fonctions JavaScript à partir de méthodes .net et de méthodes .net à partir de fonctions JavaScript. Ces scénarios portent le nom de *l’interopérabilité de JavaScript* ( *js Interop* ).
+Une application Blazor peut appeler des fonctions JavaScript à partir de méthodes .net et des méthodes .net à partir de fonctions JavaScript. Ces scénarios portent le nom de *l’interopérabilité de JavaScript* ( *js Interop* ).
 
 Cet article traite de l’appel de fonctions JavaScript à partir de .NET. Pour plus d’informations sur la façon d’appeler des méthodes .NET à partir de JavaScript, consultez <xref:blazor/call-dotnet-from-javascript> .
 
 [Afficher ou télécharger l’exemple de code](https://github.com/dotnet/AspNetCore.Docs/tree/master/aspnetcore/blazor/common/samples/) ([procédure de téléchargement](xref:index#how-to-download-a-sample))
 
-Pour appeler JavaScript à partir de .NET, utilisez l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction. Pour émettre des appels d’interopérabilité JS, injectez l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction dans votre composant. <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A> prend un identificateur pour la fonction JavaScript que vous souhaitez appeler, ainsi que n’importe quel nombre d’arguments sérialisables JSON. L’identificateur de fonction est relatif à la portée globale ( `window` ). Si vous souhaitez appeler `window.someScope.someFunction` , l’identificateur est `someScope.someFunction` . Il n’est pas nécessaire d’inscrire la fonction avant qu’elle ne soit appelée. Le type de retour `T` doit également être sérialisable JSON. `T` doit correspondre au type .NET qui correspond le mieux au type JSON retourné.
+Pour appeler JavaScript à partir de .NET, utilisez l'abstraction <xref:Microsoft.JSInterop.IJSRuntime>. Pour émettre des appels d’interopérabilité JS, injectez l'abstraction <xref:Microsoft.JSInterop.IJSRuntime> dans votre composant. <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A> prend un identificateur pour la fonction JavaScript que vous souhaitez appeler, ainsi que n’importe quel nombre d’arguments sérialisables JSON. L’identificateur de fonction est relatif à la portée globale ( `window` ). Si vous souhaitez appeler `window.someScope.someFunction` , l’identificateur est `someScope.someFunction`. Il n’est pas nécessaire d’inscrire la fonction avant qu’elle ne soit appelée. Le type de retour `T` doit également être sérialisable JSON. `T` doit correspondre au type .NET qui correspond le mieux au type JSON retourné.
 
-Les fonctions JavaScript qui retournent une [promesse](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) sont appelées avec <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A> . `InvokeAsync` désencapsule la promesse et retourne la valeur attendue par la promesse.
+Les fonctions JavaScript qui retournent une [promesse](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise) sont appelées avec <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A>. `InvokeAsync` désencapsule la promesse et retourne la valeur attendue par la promesse.
 
-Pour Blazor Server les applications pour lesquelles le prérendu est activé, l’appel à JavaScript n’est pas possible pendant le prérendu initial. Les appels Interop JavaScript doivent être différés jusqu’à ce que la connexion avec le navigateur soit établie. Pour plus d’informations, consultez la section [détecter le Blazor Server prérendu d’une application](#detect-when-a-blazor-server-app-is-prerendering) .
+Pour les applications Blazor Server pour lesquelles le prérendu est activé, l’appel à JavaScript n’est pas possible pendant le prérendu initial. Les appels Interop JavaScript doivent être différés jusqu’à ce que la connexion avec le navigateur soit établie. Pour plus d’informations, consultez la section [détecter le Blazor Server prérendu d’une application](#detect-when-a-blazor-server-app-is-prerendering).
 
-L’exemple suivant est basé sur [`TextDecoder`](https://developer.mozilla.org/docs/Web/API/TextDecoder) , un décodeur basé sur JavaScript. L’exemple montre comment appeler une fonction JavaScript à partir d’une méthode C# qui décharge une spécification du code de développeur vers une API JavaScript existante. La fonction JavaScript accepte un tableau d’octets d’une méthode C#, décode le tableau et retourne le texte au composant pour l’affichage.
+L’exemple suivant est basé sur [`TextDecoder`](https://developer.mozilla.org/docs/Web/API/TextDecoder), un décodeur basé sur JavaScript. L’exemple montre comment appeler une fonction JavaScript à partir d’une méthode C# qui décharge une spécification du code de développeur vers une API JavaScript existante. La fonction JavaScript accepte un tableau d’octets d’une méthode C#, décode le tableau et retourne le texte au composant pour l’affichage.
 
-À l’intérieur `<head>` de l’élément de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une fonction JavaScript qui utilise `TextDecoder` pour décoder un tableau passé et retourner la valeur décodée :
+À l’intérieur de l’élément `<head>` de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une fonction JavaScript qui utilise `TextDecoder` pour décoder un tableau passé et retourner la valeur décodée :
 
 [!code-html[](call-javascript-from-dotnet/samples_snapshot/index-script-convertarray.html)]
 
@@ -56,32 +56,32 @@ Du code JavaScript, tel que le code illustré dans l’exemple précédent, peut
 
 Le composant suivant :
 
-* Appelle la `convertArray` fonction JavaScript à l’aide `JS` de lorsqu’un bouton de composant ( **`Convert Array`** ) est sélectionné.
+* Appelle la fonction JavaScript `convertArray` à l’aide `JS` de lorsqu’un bouton de composant ( **`Convert Array`** ) est sélectionné.
 * Une fois la fonction JavaScript appelée, le tableau passé est converti en chaîne. La chaîne est retournée au composant pour l’affichage.
 
 [!code-razor[](call-javascript-from-dotnet/samples_snapshot/call-js-example.razor?highlight=2,34-35)]
 
 ## <a name="ijsruntime"></a>IJSRuntime
 
-Pour utiliser l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction, adoptez l’une des approches suivantes :
+Pour utiliser l'abstraction <xref:Microsoft.JSInterop.IJSRuntime>, adoptez l’une des approches suivantes :
 
-* Injecter l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction dans le Razor composant ( `.razor` ) :
+* Injecter l'abstraction <xref:Microsoft.JSInterop.IJSRuntime> dans le composant Razor ( `.razor` ) :
 
   [!code-razor[](call-javascript-from-dotnet/samples_snapshot/inject-abstraction.razor?highlight=1)]
 
-  À l’intérieur `<head>` de l’élément de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une `handleTickerChanged` fonction JavaScript. La fonction est appelée avec <xref:Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync%2A?displayProperty=nameWithType> et ne retourne pas de valeur :
+  À l’intérieur de l’élément `<head>` de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une fonction JavaScript `handleTickerChanged`. La fonction est appelée avec <xref:Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync%2A?displayProperty=nameWithType> et ne retourne pas de valeur :
 
   [!code-html[](call-javascript-from-dotnet/samples_snapshot/index-script-handleTickerChanged1.html)]
 
-* Injecter l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction dans une classe ( `.cs` ) :
+* Injecter l'abstraction <xref:Microsoft.JSInterop.IJSRuntime> dans une classe ( `.cs` ) :
 
   [!code-csharp[](call-javascript-from-dotnet/samples_snapshot/inject-abstraction-class.cs?highlight=5)]
 
-  À l’intérieur `<head>` de l’élément de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une `handleTickerChanged` fonction JavaScript. La fonction est appelée avec `JS.InvokeAsync` et retourne une valeur :
+  À l’intérieur de l’élément `<head>` de `wwwroot/index.html` ( Blazor WebAssembly ) ou `Pages/_Host.cshtml` ( Blazor Server ), fournissez une fonction JavaScript `handleTickerChanged`. La fonction est appelée avec `JS.InvokeAsync` et retourne une valeur :
 
   [!code-html[](call-javascript-from-dotnet/samples_snapshot/index-script-handleTickerChanged2.html)]
 
-* Pour la génération de contenu dynamique avec [BuildRenderTree](xref:blazor/advanced-scenarios#manual-rendertreebuilder-logic), utilisez l' `[Inject]` attribut :
+* Pour la génération de contenu dynamique avec [BuildRenderTree](xref:blazor/advanced-scenarios#manual-rendertreebuilder-logic), utilisez l'attribut `[Inject]` :
 
   ```razor
   [Inject]
@@ -91,13 +91,13 @@ Pour utiliser l' <xref:Microsoft.JSInterop.IJSRuntime> abstraction, adoptez l’
 Dans l’exemple d’application côté client qui accompagne cette rubrique, deux fonctions JavaScript sont disponibles pour l’application qui interagit avec le DOM pour recevoir l’entrée d’utilisateur et afficher un message d’accueil :
 
 * `showPrompt`: Génère une invite pour accepter l’entrée d’utilisateur (nom de l’utilisateur) et retourne le nom à l’appelant.
-* `displayWelcome`: Assigne un message de bienvenue de l’appelant à un objet DOM avec un `id` de `welcome` .
+* `displayWelcome`: Assigne un message de bienvenue de l’appelant à un objet DOM avec un `id` de `welcome`.
 
 `wwwroot/exampleJsInterop.js`:
 
 [!code-javascript[](./common/samples/3.x/BlazorWebAssemblySample/wwwroot/exampleJsInterop.js?highlight=2-7)]
 
-Placez la `<script>` balise qui référence le fichier JavaScript dans le fichier `wwwroot/index.html` ( Blazor WebAssembly ) ou le `Pages/_Host.cshtml` fichier ( Blazor Server ).
+Placez la balise `<script>` qui référence le fichier JavaScript dans le fichier `wwwroot/index.html` ( Blazor WebAssembly ) ou le `Pages/_Host.cshtml` fichier ( Blazor Server ).
 
 `wwwroot/index.html` (Blazor WebAssembly):
 
@@ -107,16 +107,16 @@ Placez la `<script>` balise qui référence le fichier JavaScript dans le fichie
 
 [!code-cshtml[](./common/samples/3.x/BlazorServerSample/Pages/_Host.cshtml?highlight=35)]
 
-Ne placez pas de `<script>` balise dans un fichier de composant parce que la `<script>` balise ne peut pas être mise à jour dynamiquement.
+Ne placez pas de balise `<script>` dans un fichier de composant parce que la balise `<script>` ne peut pas être mise à jour dynamiquement.
 
-Les méthodes .NET interagissent avec les fonctions JavaScript dans le `exampleJsInterop.js` fichier en appelant <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A?displayProperty=nameWithType> .
+Les méthodes .NET interagissent avec les fonctions JavaScript dans le fichier `exampleJsInterop.js` en appelant <xref:Microsoft.JSInterop.IJSRuntime.InvokeAsync%2A?displayProperty=nameWithType>.
 
-L' <xref:Microsoft.JSInterop.IJSRuntime> abstraction est asynchrone pour permettre les Blazor Server scénarios. Si l’application est une Blazor WebAssembly application et que vous souhaitez appeler une fonction JavaScript de manière synchrone, vous devez effectuer un cast aval vers <xref:Microsoft.JSInterop.IJSInProcessRuntime> et appeler à la <xref:Microsoft.JSInterop.IJSInProcessRuntime.Invoke%2A> place. Nous recommandons que la plupart des bibliothèques d’interopérabilité JS utilisent les API Async pour s’assurer que les bibliothèques sont disponibles dans tous les scénarios.
+L'abstraction <xref:Microsoft.JSInterop.IJSRuntime> est asynchrone pour permettre les scénarios Blazor Server. Si l’application est une application Blazor WebAssembly et que vous souhaitez appeler une fonction JavaScript de manière synchrone, vous devez effectuer un cast aval vers <xref:Microsoft.JSInterop.IJSInProcessRuntime> et appeler <xref:Microsoft.JSInterop.IJSInProcessRuntime.Invoke%2A> à la place. Nous recommandons que la plupart des bibliothèques d’interopérabilité JS utilisent les API Async pour s’assurer que les bibliothèques sont disponibles dans tous les scénarios.
 
 ::: moniker range=">= aspnetcore-5.0"
 
 > [!NOTE]
-> Pour activer l’isolation JavaScript dans les [modules JavaScript](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules)standard, consultez la section [ Blazor isolation JavaScript et références d’objets](#blazor-javascript-isolation-and-object-references) .
+> Pour activer l’isolation JavaScript dans les [modules JavaScript](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules) standard, consultez la section [ Blazor isolation JavaScript et références d’objets](#blazor-javascript-isolation-and-object-references).
 
 ::: moniker-end
 
@@ -159,9 +159,9 @@ L’exemple d’application comprend un composant pour illustrer l’interopéra
 
 L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application de l’application (par exemple, `BlazorSample` ).
 
-1. Lorsque `TriggerJsPrompt` est exécuté en sélectionnant le bouton du composant **`Trigger JavaScript Prompt`** , la `showPrompt` fonction JavaScript fournie dans le `wwwroot/exampleJsInterop.js` fichier est appelée.
-1. La `showPrompt` fonction accepte l’entrée d’utilisateur (nom de l’utilisateur), qui est codée au format HTML et renvoyée au composant. Le composant stocke le nom de l’utilisateur dans une variable locale, `name` .
-1. La chaîne stockée dans `name` est incorporée dans un message de bienvenue, qui est transmis à une fonction JavaScript, `displayWelcome` , qui affiche le message de bienvenue dans une balise de titre.
+1. Lorsque `TriggerJsPrompt` est exécuté en sélectionnant le bouton du composant **`Trigger JavaScript Prompt`** , la fonction JavaScript `showPrompt` fournie dans le fichier `wwwroot/exampleJsInterop.js` est appelée.
+1. La fonction `showPrompt` accepte l’entrée d’utilisateur (nom de l’utilisateur), qui est codée au format HTML et renvoyée au composant. Le composant stocke le nom de l’utilisateur dans une variable locale, `name`.
+1. La chaîne stockée dans `name` est incorporée dans un message de bienvenue, qui est transmis à une fonction JavaScript, `displayWelcome`, qui affiche le message de bienvenue dans une balise de titre.
 
 ## <a name="call-a-void-javascript-function"></a>Appeler une fonction JavaScript void
 
@@ -170,20 +170,20 @@ Utilisez <xref:Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync%2A?displa
 * Fonctions JavaScript qui retournent [void (0)/void 0](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Operators/void) ou [non défini](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/undefined).
 * Si .NET n’est pas nécessaire pour lire le résultat d’un appel JavaScript.
 
-## <a name="detect-when-a-no-locblazor-server-app-is-prerendering"></a>Détecter quand une Blazor Server application est prérendu
+## <a name="detect-when-a-no-locblazor-server-app-is-prerendering"></a>Détecter quand une application Blazor Server est prérendu
  
 [!INCLUDE[](~/includes/blazor-prerendering.md)]
 
 ## <a name="capture-references-to-elements"></a>Capturer des références à des éléments
 
-Certains scénarios d’interopérabilité JS requièrent des références à des éléments HTML. Par exemple, une bibliothèque d’interface utilisateur peut nécessiter une référence d’élément pour l’initialisation, ou vous devrez peut-être appeler des API de type commande sur un élément, tel que `focus` ou `play` .
+Certains scénarios d’interopérabilité JS requièrent des références à des éléments HTML. Par exemple, une bibliothèque d’interface utilisateur peut nécessiter une référence d’élément pour l’initialisation, ou vous devrez peut-être appeler des API de type commande sur un élément, tel que `focus` ou `play`.
 
 Capturer des références aux éléments HTML dans un composant à l’aide de l’approche suivante :
 
-* Ajoutez un `@ref` attribut à l’élément HTML.
-* Définissez un champ de type <xref:Microsoft.AspNetCore.Components.ElementReference> dont le nom correspond à la valeur de l' `@ref` attribut.
+* Ajoutez un attribut `@ref` à l’élément HTML.
+* Définissez un champ de type <xref:Microsoft.AspNetCore.Components.ElementReference> dont le nom correspond à la valeur de l'attribut `@ref`.
 
-L’exemple suivant illustre la capture d’une référence à l' `username` `<input>` élément :
+L’exemple suivant illustre la capture d’une référence à l'élément `<input>` `username` :
 
 ```razor
 <input @ref="username" ... />
@@ -194,7 +194,7 @@ L’exemple suivant illustre la capture d’une référence à l' `username` `<i
 ```
 
 > [!WARNING]
-> Utilisez uniquement une référence d’élément pour muter le contenu d’un élément vide qui n’interagit pas avec Blazor . Ce scénario est utile quand une API tierce fournit du contenu à l’élément. Étant donné que Blazor n’interagit pas avec l’élément, il n’existe aucun risque de conflit entre Blazor la représentation de l’élément et le DOM.
+> Utilisez uniquement une référence d’élément pour muter le contenu d’un élément vide qui n’interagit pas avec Blazor. Ce scénario est utile quand une API tierce fournit du contenu à l’élément. Étant donné que Blazor n’interagit pas avec l’élément, il n’existe aucun risque de conflit entre la représentation Blazor de l’élément et le DOM.
 >
 > Dans l’exemple suivant, il est *dangereux* de faire muter le contenu de la liste non triée ( `ul` ), car Blazor interagit avec le DOM pour remplir les éléments de liste de cet élément ( `<li>` ) :
 >
@@ -207,9 +207,9 @@ L’exemple suivant illustre la capture d’une référence à l' `username` `<i
 > </ul>
 > ```
 >
-> Si l’interopérabilité JS muter le contenu de l’élément `MyList` et Blazor tente d’appliquer des différences à l’élément, les différences ne correspondent pas au DOM.
+> Si l’interopérabilité JS mute le contenu de l’élément `MyList` et Blazor tente d’appliquer des différences à l’élément, les différences ne corresponderont pas au DOM.
 
-Un <xref:Microsoft.AspNetCore.Components.ElementReference> est passé à du code JavaScript via l’interopérabilité js. Le code JavaScript reçoit une `HTMLElement` instance, qu’il peut utiliser avec les API DOM normales. Par exemple, le code suivant définit une méthode d’extension .NET qui permet d’envoyer un clic de souris à un élément :
+Un <xref:Microsoft.AspNetCore.Components.ElementReference> est passé à du code JavaScript via l’interopérabilité js. Le code JavaScript reçoit une instance `HTMLElement`, qu’il peut utiliser avec les API DOM normales. Par exemple, le code suivant définit une méthode d’extension .NET qui permet d’envoyer un clic de souris à un élément :
 
 `exampleJsInterop.js`:
 
@@ -224,15 +224,15 @@ window.interopFunctions = {
 ::: moniker range=">= aspnetcore-5.0"
 
 > [!NOTE]
-> Utilisez [`FocusAsync`](xref:blazor/components/event-handling#focus-an-element) dans le code C# pour mettre le focus sur un élément, qui est intégré à l' Blazor infrastructure et fonctionne avec les références d’élément.
+> Utilisez [`FocusAsync`](xref:blazor/components/event-handling#focus-an-element) dans le code C# pour mettre le focus sur un élément, qui est intégré à l'infrastructure Blazor et fonctionne avec les références d’élément.
 
 ::: moniker-end
 
-Pour appeler une fonction JavaScript qui ne retourne pas de valeur, utilisez <xref:Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync%2A?displayProperty=nameWithType> . Le code suivant déclenche un événement côté client `Click` en appelant la fonction JavaScript précédente avec le capturé <xref:Microsoft.AspNetCore.Components.ElementReference> :
+Pour appeler une fonction JavaScript qui ne retourne pas de valeur, utilisez <xref:Microsoft.JSInterop.JSRuntimeExtensions.InvokeVoidAsync%2A?displayProperty=nameWithType>. Le code suivant déclenche un événement `Click` côté client en appelant la fonction JavaScript précédente avec le <xref:Microsoft.AspNetCore.Components.ElementReference> capturé :
 
 [!code-razor[](call-javascript-from-dotnet/samples_snapshot/component1.razor?highlight=14-15)]
 
-Pour utiliser une méthode d’extension, créez une méthode d’extension statique qui reçoit l' <xref:Microsoft.JSInterop.IJSRuntime> instance :
+Pour utiliser une méthode d’extension, créez une méthode d’extension statique qui reçoit l'instance <xref:Microsoft.JSInterop.IJSRuntime> :
 
 ```csharp
 public static async Task TriggerClickEvent(this ElementReference elementRef, 
@@ -242,12 +242,12 @@ public static async Task TriggerClickEvent(this ElementReference elementRef,
 }
 ```
 
-La `clickElement` méthode est appelée directement sur l’objet. L’exemple suivant suppose que la `TriggerClickEvent` méthode est disponible à partir de l' `JsInteropClasses` espace de noms :
+La méthode `clickElement` est appelée directement sur l’objet. L’exemple suivant suppose que la méthode `TriggerClickEvent` est disponible à partir de l'espace de noms `JsInteropClasses` :
 
 [!code-razor[](call-javascript-from-dotnet/samples_snapshot/component2.razor?highlight=15)]
 
 > [!IMPORTANT]
-> La `exampleButton` variable est remplie uniquement après le rendu du composant. Si un non rempli <xref:Microsoft.AspNetCore.Components.ElementReference> est passé à du code JavaScript, le code JavaScript reçoit la valeur `null` . Pour manipuler des références d’élément après que le composant a terminé le rendu, utilisez les [ `OnAfterRenderAsync` `OnAfterRender` méthodes de cycle de vie des composants ou](xref:blazor/components/lifecycle#after-component-render).
+> La variable `exampleButton` est remplie uniquement après le rendu du composant. Si un <xref:Microsoft.AspNetCore.Components.ElementReference> non rempli est passé à du code JavaScript, le code JavaScript reçoit la valeur `null`. Pour manipuler des références d’élément après que le composant a terminé le rendu, utilisez les [méthodes de cycle de vie des composants `OnAfterRenderAsync` ou `OnAfterRender`](xref:blazor/components/lifecycle#after-component-render).
 
 Lorsque vous utilisez des types génériques et que vous retournez une valeur, utilisez <xref:System.Threading.Tasks.ValueTask%601> :
 
@@ -259,7 +259,7 @@ public static ValueTask<T> GenericMethod<T>(this ElementReference elementRef,
 }
 ```
 
-`GenericMethod` est appelé directement sur l’objet avec un type. L’exemple suivant suppose que le `GenericMethod` est disponible à partir de l' `JsInteropClasses` espace de noms :
+`GenericMethod` est appelé directement sur l’objet avec un type. L’exemple suivant suppose que le `GenericMethod` est disponible à partir de l'espace de noms `JsInteropClasses` :
 
 [!code-razor[](call-javascript-from-dotnet/samples_snapshot/component3.razor?highlight=17)]
 
@@ -267,15 +267,15 @@ public static ValueTask<T> GenericMethod<T>(this ElementReference elementRef,
 
 Un <xref:Microsoft.AspNetCore.Components.ElementReference> ne peut pas être transmis entre les composants, car :
 
-* L’instance ne peut exister qu’après le rendu du composant, c’est-à-dire pendant ou après l’exécution de la méthode d’un composant <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender%2A> / <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync%2A> .
-* Un <xref:Microsoft.AspNetCore.Components.ElementReference> est un [`struct`](/csharp/language-reference/builtin-types/struct) , qui ne peut pas être passé en tant que [paramètre de composant](xref:blazor/components/index#component-parameters).
+* L’instance ne peut exister qu’après le rendu du composant, c’est-à-dire pendant ou après l’exécution de la méthode d’un composant <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender%2A> / <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRenderAsync%2A>.
+* Un <xref:Microsoft.AspNetCore.Components.ElementReference> est un [`struct`](/csharp/language-reference/builtin-types/struct), qui ne peut pas être passé en tant que [paramètre de composant](xref:blazor/components/index#component-parameters).
 
 Pour qu’un composant parent rende une référence d’élément disponible pour d’autres composants, le composant parent peut :
 
 * Autorisez les composants enfants à inscrire des rappels.
-* Appelez les rappels inscrits pendant l' <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender%2A> événement avec la référence d’élément passée. Indirectement, cette approche permet aux composants enfants d’interagir avec la référence d’élément du parent.
+* Appelez les rappels inscrits pendant l'événement <xref:Microsoft.AspNetCore.Components.ComponentBase.OnAfterRender%2A> avec la référence d’élément passée. Indirectement, cette approche permet aux composants enfants d’interagir avec la référence d’élément du parent.
 
-L' Blazor WebAssembly exemple suivant illustre l’approche.
+L'exemple Blazor WebAssembly suivant illustre l’approche.
 
 Dans le `<head>` de `wwwroot/index.html` :
 
@@ -474,7 +474,7 @@ L’espace réservé `{APP ASSEMBLY}` est le nom de l’assembly d’application
 
 ## <a name="harden-js-interop-calls"></a>Sécuriser les appels d’interopérabilité JS
 
-L’interopérabilité de JS peut échouer en raison d’erreurs réseau et doit être considérée comme non fiable. Par défaut, une Blazor Server application expire les appels d’interopérabilité js sur le serveur après une minute. Si une application peut tolérer un délai d’expiration plus agressif, définissez le délai d’expiration à l’aide de l’une des approches suivantes :
+L’interopérabilité de JS peut échouer en raison d’erreurs réseau et doit être considérée comme non fiable. Par défaut, une application Blazor Server expire les appels d’interopérabilité js sur le serveur après une minute. Si une application peut tolérer un délai d’expiration plus agressif, définissez le délai d’expiration à l’aide de l’une des approches suivantes :
 
 * Globalement dans `Startup.ConfigureServices` , spécifiez le délai d’expiration :
 
@@ -490,7 +490,7 @@ L’interopérabilité de JS peut échouer en raison d’erreurs réseau et doit
       TimeSpan.FromSeconds({SECONDS}), new[] { "Arg1" });
   ```
 
-Pour plus d’informations sur l’épuisement des ressources, consultez <xref:blazor/security/server/threat-mitigation> .
+Pour plus d’informations sur l’épuisement des ressources, consultez <xref:blazor/security/server/threat-mitigation>.
 
 [!INCLUDE[](~/includes/blazor-share-interop-code.md)]
 
@@ -503,17 +503,17 @@ Les objets qui contiennent des références circulaires ne peuvent pas être sé
 
 Pour plus d’informations, consultez les problèmes suivants :
 
-* [Les références circulaires ne sont pas prises en charge, prennent deux (dotnet/aspnetcore #20525)](https://github.com/dotnet/aspnetcore/issues/20525)
+* [Les références circulaires ne sont pas prises en charge, prise deux (dotnet/aspnetcore #20525)](https://github.com/dotnet/aspnetcore/issues/20525)
 * [Proposition : ajouter un mécanisme pour gérer les références circulaires lors de la sérialisation (dotnet/Runtime #30820)](https://github.com/dotnet/runtime/issues/30820)
 
 ::: moniker range=">= aspnetcore-5.0"
 
-## <a name="no-locblazor-javascript-isolation-and-object-references"></a>Blazor Isolation JavaScript et références d’objets
+## <a name="no-locblazor-javascript-isolation-and-object-references"></a>Isolation JavaScript Blazor et références d’objets
 
-Blazor active l’isolation JavaScript dans les [modules JavaScript](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules)standard. L’isolation JavaScript offre les avantages suivants :
+Blazor active l’isolation JavaScript dans les [modules JavaScript](https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules) standard. L’isolation JavaScript offre les avantages suivants :
 
 * Le JavaScript importé ne pollue plus l’espace de noms global.
-* Les consommateurs d’une bibliothèque et de composants ne sont pas requis pour importer le code JavaScript associé.
+* Les consommateurs d’une bibliothèque et de composants ne sont pas requis d'importer le code JavaScript associé.
 
 Par exemple, le module JavaScript suivant exporte une fonction JavaScript pour afficher une invite de navigateur :
 
@@ -523,16 +523,16 @@ export function showPrompt(message) {
 }
 ```
 
-Ajoutez le module JavaScript précédent à une bibliothèque .NET en tant que ressource Web statique ( `wwwroot/exampleJsInterop.js` ), puis importez le module dans le code .net à l’aide du <xref:Microsoft.JSInterop.IJSRuntime> service. Le service est injecté comme `js` (non affiché) pour l’exemple suivant :
+Ajoutez le module JavaScript précédent à une bibliothèque .NET en tant que ressource Web statique ( `wwwroot/exampleJsInterop.js` ), puis importez le module dans le code .net à l’aide du service <xref:Microsoft.JSInterop.IJSRuntime>. Le service est injecté comme `js` (non affiché) pour l’exemple suivant :
 
 ```csharp
 var module = await js.InvokeAsync<IJSObjectReference>(
     "import", "./_content/MyComponents/exampleJsInterop.js");
 ```
 
-L' `import` identificateur dans l’exemple précédent est un identificateur spécial utilisé spécifiquement pour l’importation d’un module JavaScript. Spécifiez le module à l’aide de son chemin d’accès aux ressources Web statiques stable : `_content/{LIBRARY NAME}/{PATH UNDER WWWROOT}` . L’espace réservé `{LIBRARY NAME}` est le nom de la bibliothèque. L’espace réservé `{PATH UNDER WWWROOT}` est le chemin d’accès au script sous `wwwroot` .
+L'identificateur `import` dans l’exemple précédent est un identificateur spécial utilisé spécifiquement pour l’importation d’un module JavaScript. Spécifiez le module à l’aide de son chemin d’accès aux ressources Web statiques stable : `_content/{LIBRARY NAME}/{PATH UNDER WWWROOT}` . L’espace réservé `{LIBRARY NAME}` est le nom de la bibliothèque. L’espace réservé `{PATH UNDER WWWROOT}` est le chemin d’accès au script sous `wwwroot`.
 
-<xref:Microsoft.JSInterop.IJSRuntime> importe le module en tant que `IJSObjectReference` , qui représente une référence à un objet JavaScript à partir du code .net. Utilisez `IJSObjectReference` pour appeler les fonctions JavaScript exportées à partir du module :
+<xref:Microsoft.JSInterop.IJSRuntime> importe le module en tant que `IJSObjectReference`, qui représente une référence à un objet JavaScript à partir du code .net. Utilisez `IJSObjectReference` pour appeler les fonctions JavaScript exportées à partir du module :
 
 ```csharp
 public async ValueTask<string> Prompt(string message)
@@ -563,15 +563,15 @@ string helloWorldString = jsUnmarshalledReference.InvokeUnmarshalled<string, str
     "helloWorld");
 ```
 
-Dans l’exemple précédent, le <xref:Microsoft.JSInterop.IJSRuntime> service est injecté dans la classe et assigné à `js` (non affiché).
+Dans l’exemple précédent, le service <xref:Microsoft.JSInterop.IJSRuntime> est injecté dans la classe et assigné à `js` (non affiché).
 
 ## <a name="use-of-javascript-libraries-that-render-ui-dom-elements"></a>Utilisation de bibliothèques JavaScript qui affichent l’interface utilisateur (éléments DOM)
 
-Parfois, vous souhaiterez peut-être utiliser des bibliothèques JavaScript qui produisent des éléments d’interface utilisateur visibles dans le DOM du navigateur. À première vue, cela peut paraître difficile, car la Blazor différenciation du système repose sur le contrôle de l’arborescence des éléments DOM et s’exécute en erreurs si un code externe fait muter l’arborescence DOM et invalide son mécanisme pour l’application de différences. Il ne s’agit pas d’une Blazor limitation spécifique. Le même défi se produit avec toute infrastructure d’interface utilisateur basée sur des différences.
+Parfois, vous souhaiterez peut-être utiliser des bibliothèques JavaScript qui produisent des éléments d’interface utilisateur visibles dans le DOM du navigateur. À première vue, cela peut paraître difficile, car la différenciation du système Blazor repose sur le contrôle de l’arborescence des éléments DOM et s’exécute en erreurs si un code externe fait muter l’arborescence DOM et invalide son mécanisme pour l’application de différences. Il ne s’agit pas d’une limitation spécifique à Blazor. Le même défi se produit avec toute infrastructure d’interface utilisateur basée sur des différences.
 
-Heureusement, il est facile d’incorporer de manière fiable une interface utilisateur générée en externe dans une Blazor interface utilisateur de composant. La technique recommandée consiste à faire en sorte que le code ( `.razor` fichier) du composant produise un élément vide. En ce qui concerne Blazor le système de différenciation, l’élément est toujours vide, de sorte que le convertisseur ne parcourt pas de manière récursive l’élément et laisse son contenu seul. Cela permet de remplir en toute sécurité l’élément avec un contenu arbitraire géré en externe.
+Heureusement, il est facile d’incorporer de manière fiable une interface utilisateur générée en externe dans une interface utilisateur de composant Blazor. La technique recommandée consiste à faire en sorte que le code (fichier `.razor`) du composant produise un élément vide. En ce qui concerne Blazor le système de différenciation, l’élément est toujours vide, de sorte que le convertisseur ne parcourt pas de manière récursive l’élément et laisse son contenu seul. Cela permet de remplir en toute sécurité l’élément avec un contenu arbitraire géré en externe.
 
-L’exemple suivant illustre le concept. Dans l' `if` instruction, lorsque a la valeur `firstRender` `true` , effectuez une opération avec `myElement` . Par exemple, appelez une bibliothèque JavaScript externe pour la remplir. Blazor conserve le contenu de l’élément seul jusqu’à ce que ce composant lui-même soit supprimé. Lorsque le composant est supprimé, la sous-arborescence DOM entière du composant est également supprimée.
+L’exemple suivant illustre le concept. Dans l'instruction `if`, lorsque `firstRender` a la valeur `true`, effectuez une opération avec `myElement`. Par exemple, appelez une bibliothèque JavaScript externe pour la remplir. Blazor conserve le contenu de l’élément seul jusqu’à ce que ce composant lui-même soit supprimé. Lorsque le composant est supprimé, la sous-arborescence DOM entière du composant est également supprimée.
 
 ```razor
 <h1>Hello! This is a Blazor component rendered at @DateTime.Now</h1>
@@ -631,7 +631,7 @@ En guise d’exemple plus détaillé, considérez le composant suivant qui resti
 }
 ```
 
-Le module JavaScript correspondant, qui doit être placé à l’adresse `wwwroot/mapComponent.js` , est le suivant :
+Le module JavaScript correspondant, qui doit être placé à l’adresse `wwwroot/mapComponent.js`, est le suivant :
 
 ```javascript
 import 'https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js';
@@ -654,7 +654,7 @@ export function setMapCenter(map, latitude, longitude) {
 }
 ```
 
-Dans l’exemple précédent, remplacez la chaîne `{ACCESS TOKEN}` par un jeton d’accès valide à partir duquel vous pouvez obtenir https://account.mapbox.com .
+Dans l’exemple précédent, remplacez la chaîne `{ACCESS TOKEN}` par un jeton d’accès valide que vous pouvez obtenir à partir de https://account.mapbox.com.
 
 Pour produire un style correct, ajoutez la balise de feuille de style suivante à la page HTML de l’hôte ( `index.html` ou `_Host.cshtml` ) :
 
@@ -665,31 +665,31 @@ Pour produire un style correct, ajoutez la balise de feuille de style suivante �
 L’exemple précédent produit une interface utilisateur de carte interactive, dans laquelle l’utilisateur :
 
 * Peut faire glisser pour faire défiler ou zoomer.
-* Cliquez sur les boutons pour accéder aux emplacements prédéfinis.
+* Clique sur les boutons pour accéder aux emplacements prédéfinis.
 
 ![Mapbox Street Map de Tokyo, Japon et des boutons permettant de sélectionner les Bristol, le Royaume-Uni et Tokyo, le Japon](https://user-images.githubusercontent.com/1101362/94939821-92ef6700-04ca-11eb-858e-fff6df0053ae.png)
 
 Les points clés à comprendre sont les suivants :
 
- * Le `<div>` avec `@ref="mapElement"` est laissé vide en ce qui concerne le Blazor . C’est pourquoi il est possible de le `mapbox-gl.js` remplir et de modifier son contenu au fil du temps. Vous pouvez utiliser cette technique avec n’importe quelle bibliothèque JavaScript qui restitue l’interface utilisateur. Vous pouvez même incorporer des composants d’une infrastructure SPA JavaScript tierce dans des Blazor composants, à condition qu’ils ne tentent pas d’atteindre et de modifier d’autres parties de la page. Il n’est *pas* possible pour le code JavaScript externe de modifier des éléments qui Blazor ne sont pas pris en compte comme vides.
- * Lorsque vous utilisez cette approche, gardez à l’esprit les règles de Blazor conservation ou de destruction des éléments DOM. Dans l’exemple précédent, le composant gère en toute sécurité les événements de clic de bouton et met à jour l’instance de mappage existante, car les éléments DOM sont conservés dans la mesure du possible par défaut. Si vous avez rendu une liste d’éléments cartographiques à partir d’une `@foreach` boucle, vous souhaitez utiliser `@key` pour garantir la préservation des instances de composant. Dans le cas contraire, les modifications apportées aux données de la liste peuvent entraîner la conservation de l’état des instances précédentes par les instances de composant de manière indésirable. Pour plus d’informations, consultez [utilisation @key de pour conserver les éléments et les composants](xref:blazor/components/index#use-key-to-control-the-preservation-of-elements-and-components).
+ * Le `<div>` avec `@ref="mapElement"` est laissé vide en ce qui concerne Blazor. C’est pourquoi il est possible pour `mapbox-gl.js` de le remplir et de modifier son contenu au fil du temps. Vous pouvez utiliser cette technique avec n’importe quelle bibliothèque JavaScript qui restitue l’interface utilisateur. Vous pouvez même incorporer des composants d’une infrastructure SPA JavaScript tierce dans des composants Blazor, à condition qu’ils ne tentent pas d’atteindre et de modifier d’autres parties de la page. Il n’est *pas* possible pour le code JavaScript externe de modifier des éléments Blazor qui ne sont pas pris en compte comme vides.
+ * Lorsque vous utilisez cette approche, gardez à l’esprit les règles de conservation ou de destruction des éléments DOM de Blazor. Dans l’exemple précédent, le composant gère en toute sécurité les événements de clic de bouton et met à jour l’instance de mappage existante, car les éléments DOM sont conservés dans la mesure du possible par défaut. Si vous avez rendu une liste d’éléments cartographiques à partir d’une boucle `@foreach`, vous souhaitez utiliser `@key` pour garantir la préservation des instances de composant. Dans le cas contraire, les modifications apportées aux données de la liste peuvent entraîner la conservation de l’état des instances précédentes par les instances de composant de manière indésirable. Pour plus d’informations, consultez [utilisation @key de pour conserver les éléments et les composants](xref:blazor/components/index#use-key-to-control-the-preservation-of-elements-and-components).
 
-En outre, l’exemple précédent montre comment il est possible d’encapsuler la logique JavaScript et les dépendances dans un module ES6 et de le charger dynamiquement à l’aide de l' `import` identificateur. Pour plus d’informations, consultez la rubrique [isolation JavaScript et références d’objets](#blazor-javascript-isolation-and-object-references).
+En outre, l’exemple précédent montre comment il est possible d’encapsuler la logique JavaScript et les dépendances dans un module ES6 et de le charger dynamiquement à l’aide de l'identificateur `import`. Pour plus d’informations, consultez la rubrique [isolation JavaScript et références d’objets](#blazor-javascript-isolation-and-object-references).
 
 ::: moniker-end
 
 ## <a name="size-limits-on-js-interop-calls"></a>Limites de taille sur les appels d’interopérabilité JS
 
-Dans Blazor WebAssembly , l’infrastructure n’impose pas de limites sur la taille des entrées et des sorties des appels d’interopérabilité js.
+Dans Blazor WebAssembly, l’infrastructure n’impose pas de limites sur la taille des entrées et des sorties des appels d’interopérabilité js.
 
-Dans Blazor Server , le résultat d’un appel d’interopérabilité js est limité par la taille maximale de charge utile appliquée par SignalR ( <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize> ), qui est par défaut de 32 Ko. Les applications qui tentent de répondre à un appel d’interopérabilité JS avec une charge utile supérieure à <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize> génèrent une erreur. Une limite plus grande peut être configurée en modifiant <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize> . L’exemple suivant définit la taille maximale des messages de réception sur 64 Ko (64 * 1024 * 1024) :
+Dans Blazor Server, le résultat d’un appel d’interopérabilité js est limité par la taille maximale de charge utile appliquée par SignalR ( <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize> ), qui est par défaut de 32 Ko. Les applications qui tentent de répondre à un appel d’interopérabilité JS avec une charge utile supérieure à <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize> génèrent une erreur. Une limite plus grande peut être configurée en modifiant <xref:Microsoft.AspNetCore.SignalR.HubOptions.MaximumReceiveMessageSize>. L’exemple suivant définit la taille maximale des messages de réception sur 64 Ko (64 * 1024 * 1024) :
 
 ```csharp
 services.AddServerSideBlazor()
    .AddHubOptions(options => options.MaximumReceiveMessageSize = 64 * 1024 * 1024);
 ```
 
-L’augmentation de la SignalR limite survient au détriment de l’utilisation de ressources serveur supplémentaires et expose le serveur à des risques accrus d’un utilisateur malveillant. En outre, la lecture d’une grande quantité de contenu dans la mémoire en tant que chaînes ou tableaux d’octets peut également entraîner des allocations qui fonctionnent mal avec le garbage collector, ce qui entraîne des pénalités en matière de performances. L’une des options de lecture des charges utiles volumineuses consiste à entourer le contenu de plus petits segments et à traiter la charge utile sous la forme d’un <xref:System.IO.Stream> . Cela peut être utilisé lors de la lecture de charges utiles JSON volumineuses ou si les données sont disponibles en tant qu’octets bruts dans JavaScript. Pour obtenir un exemple qui montre comment envoyer des charges utiles binaires volumineuses dans Blazor Server qui utilise des techniques similaires au `InputFile` composant, consultez l' [exemple d’application de soumission binaire](https://github.com/aspnet/samples/tree/master/samples/aspnetcore/blazor/BinarySubmit).
+L’augmentation de la limite SignalR survient au détriment de l’utilisation de ressources serveur supplémentaires et expose le serveur à des risques accrus d’un utilisateur malveillant. En outre, la lecture d’une grande quantité de contenu dans la mémoire en tant que chaînes ou tableaux d’octets peut également entraîner des allocations qui fonctionnent mal avec le garbage collector, ce qui entraîne des pénalités en matière de performances. L’une des options de lecture des charges utiles volumineuses consiste à entourer le contenu de plus petits segments et à traiter la charge utile sous la forme d’un <xref:System.IO.Stream>. Cela peut être utilisé lors de la lecture de charges utiles JSON volumineuses ou si les données sont disponibles en tant qu’octets bruts dans JavaScript. Pour obtenir un exemple qui montre comment envoyer des charges utiles binaires volumineuses dans Blazor Server qui utilise des techniques similaires au `InputFile` composant, consultez l'[exemple d’application de soumission binaire](https://github.com/aspnet/samples/tree/master/samples/aspnetcore/blazor/BinarySubmit).
 
 Tenez compte des conseils suivants lors du développement de code qui transfère une grande quantité de données entre JavaScript et Blazor :
 
