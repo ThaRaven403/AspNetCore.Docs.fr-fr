@@ -19,12 +19,12 @@ no-loc:
 - Razor
 - SignalR
 uid: data/ef-mvc/intro
-ms.openlocfilehash: 77cf1e9ad51b7044a35e1a9b2c125b0fdd91435e
-ms.sourcegitcommit: 33f631a4427b9a422755601ac9119953db0b4a3e
+ms.openlocfilehash: a815502bb8aa97c137ea8940c7e5f1dde79e9999
+ms.sourcegitcommit: fe5a287fa6b9477b130aa39728f82cdad57611ee
 ms.translationtype: MT
 ms.contentlocale: fr-FR
-ms.lasthandoff: 11/05/2020
-ms.locfileid: "93365386"
+ms.lasthandoff: 11/10/2020
+ms.locfileid: "94430885"
 ---
 # <a name="tutorial-get-started-with-ef-core-in-an-aspnet-mvc-web-app"></a>Didacticiel : prise en main de EF Core dans une application Web MVC ASP.NET
 
@@ -73,11 +73,15 @@ Les utilisateurs peuvent afficher et mettre à jour les informations relatives a
 
 ## <a name="create-web-app"></a>Créer une application web
 
-* Démarrez Visual Studio et sélectionnez **ASP.net Core application Web** > **suivant**.
-* Nommez le projet `ContosoUniversity`. Il est important d’utiliser ce nom exact, y compris la mise en majuscules, afin que les espaces de noms correspondent lorsque le code est copié.
-* Sélectionnez **Créer**.
-* Sélectionnez **.net Core** et **ASP.net Core 5,0** dans les listes déroulantes, puis sélectionnez **application Web (modèle-vue-contrôleur)** .
-  ![Boîte de dialogue Nouveau projet ASP.NET Core](intro/_static/new-aspnet5.png)
+1. Démarrez Visual Studio et sélectionnez **Créer un projet**.
+1. Dans la boîte de dialogue **créer un nouveau projet** , sélectionnez **ASP.net Core application Web** > **suivant**.
+1. Dans la boîte de dialogue **configurer votre nouveau projet** , entrez `ContosoUniversity` pour **nom du projet**. Il est important d’utiliser ce nom exact, y compris la mise en majuscules, donc chaque correspond à la `namespace` copie du code.
+1. Sélectionnez **Create** (Créer).
+1. Dans la boîte de dialogue **créer une application web ASP.net Core** , sélectionnez :
+    1. **.Net Core** et **ASP.net Core 5,0** dans les listes déroulantes.
+    1. **ASP.net Core application Web (Model-View-Controller)**.
+    1. **Create** 
+       Créer ![ Boîte de dialogue Nouveau projet de ASP.NET Core](~/data/ef-mvc/intro/_static/new-aspnet5.png)
 
 ## <a name="set-up-the-site-style"></a>Configurer le style du site
 
@@ -109,8 +113,8 @@ Le package d’SQL Server EF et ses dépendances, `Microsoft.EntityFrameworkCore
 Ajoutez le package NuGet [Microsoft. AspNetCore. Diagnostics. EntityFrameworkCore](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore) et le package NuGet [Microsoft. AspNetCore. Diagnostics. EntityFrameworkCore](https://www.nuget.org/packages/Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore) . Dans la console du gestionnaire de programmes (PMC), entrez les commandes suivantes pour ajouter les packages NuGet :
 
 ```powershell
-Install-Package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore -Version 5.0.0-rc.2.20475.17
-Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 5.0.0-rc.2.20475.6
+Install-Package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore
+Install-Package Microsoft.EntityFrameworkCore.SqlServer
 ```
 
 Le `Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore` package NuGet fournit ASP.net Core intergiciel pour EF Core pages d’erreurs. Cet intergiciel (middleware) permet de détecter et de diagnostiquer les erreurs avec EF Core migrations.
@@ -388,11 +392,13 @@ Passez au tutoriel suivant pour découvrir comment effectuer des opérations CRU
 
 ::: moniker-end
 
-::: moniker range="< aspnetcore-3.0"
+::: moniker range="<= aspnetcore-3.1"
 
 [!INCLUDE [RP better than MVC](~/includes/RP-EF/rp-over-mvc.md)]
 
 L’exemple d’application web Contoso University montre comment créer des applications web ASP.NET Core 2.2 MVC à l’aide d’Entity Framework (EF) Core 2.2 et de Visual Studio 2017 ou 2019.
+
+Ce didacticiel n’a pas été mis à jour pour ASP.NET Core 3,1. Il a été mis à jour pour [ASP.NET Core 5,0](xref:data/ef-mvc/intro?view=aspnetcore-5.0).
 
 L’exemple d’application est un site web pour une université Contoso fictive. Il comprend des fonctionnalités telles que l’admission des étudiants, la création des cours et les affectations des formateurs. Ce document est le premier d’une série de didacticiels qui expliquent comment générer à partir de zéro l’exemple d’application Contoso University.
 
